@@ -35,11 +35,14 @@ android {
 }
 
 dependencies {
-
-    implementation(libs.appcompat)
+    implementation(libs.appcompat) {
+        exclude(group = "androidx.coordinatorlayout", module = "coordinatorlayout")
+    }
     implementation(libs.material)
     implementation(libs.constraintlayout)
-    implementation(libs.navigation.fragment)
+    implementation(libs.navigation.fragment) {
+        exclude(group = "androidx.coordinatorlayout", module = "coordinatorlayout")
+    }
     implementation(libs.navigation.ui)
     implementation(libs.activity)
     testImplementation(libs.junit)
