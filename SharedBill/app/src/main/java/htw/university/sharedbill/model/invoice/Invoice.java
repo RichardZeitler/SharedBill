@@ -20,5 +20,4 @@ public interface Invoice {
     String getCheckSum();
     void addItem(Item item);
     void removeItem(Item item);
-
 }

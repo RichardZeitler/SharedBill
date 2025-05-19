@@ -26,9 +26,6 @@ public class EateryInvoice implements Invoice, Serializable {
     private Map<Item, Integer> items = new HashMap<>();
     private transient List<InvoiceObserver> invoiceObserverList = new ArrayList<>();
 
-    public static List<Invoice> INVOICES = new ArrayList<>();
-
-
     public void addObserver(InvoiceObserver invoiceObserver) {
         if (invoiceObserver != null && !invoiceObserverList.contains(invoiceObserver))
             invoiceObserverList.add(invoiceObserver);

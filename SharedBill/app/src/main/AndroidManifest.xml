@@ -17,16 +17,16 @@
         android:theme="@style/Theme.SharedBill"
         tools:targetApi="31">
         <activity
-            android:name=".controller.InvoiceShowAcitivity"
+            android:name=".controller.invoce.InvoiceShowAcitivity"
             android:exported="false" />
         <activity
-            android:name=".controller.InvoiceHistoryActivity"
+            android:name=".controller.invoce.InvoiceHistoryActivity"
             android:exported="false" />
         <activity
-            android:name=".controller.CreateInvoiceActivity"
+            android:name=".controller.invoce.CreateInvoiceActivity"
             android:exported="false" />
         <activity
-            android:name=".controller.StartActivity"
+            android:name=".controller.invoce.StartActivity"
             android:exported="true"
             android:theme="@style/Theme.SharedBill">
             <intent-filter>

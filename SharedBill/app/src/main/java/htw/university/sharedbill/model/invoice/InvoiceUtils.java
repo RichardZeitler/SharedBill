@@ -15,31 +15,31 @@ import java.util.List;
 
 public class InvoiceUtils {
 
-    public static void saveInvoiceToAppStorage(Context context, Invoice invoice) {
+    public static void saveInvoiceToAppStorage(Context context, InvoiceWrapper invoiceWrapper) {
         File folder = context.getExternalFilesDir("Invoices");
         if (folder == null) {
             Toast.makeText(context, "Fehler: Speicherverzeichnis konnte nicht erstellt werden.", Toast.LENGTH_SHORT).show();
             return;
         }
 
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd_HH-mm-ss");
-        String formattedDate = invoice.getDate().format(formatter);
+        Invoice invoice = invoiceWrapper.getInvoice();
 
-        String fileName = invoice.getInvoiceID() + "_" + formattedDate + ".ser";
+
+        String fileName = invoice.getInvoiceID() + ".ser";
         File file = new File(folder, fileName);
 
         try (FileOutputStream fileOut = new FileOutputStream(file);
              ObjectOutputStream out = new ObjectOutputStream(fileOut)) {
 
-            out.writeObject(invoice);
+            out.writeObject(invoiceWrapper);
 
         } catch (IOException e) {
             Toast.makeText(context, "Fehler beim Speichern der Rechnung.", Toast.LENGTH_SHORT).show();
         }
     }
 
-    public static List<Invoice> loadAllInvoices(Context context) {
-        List<Invoice> invoiceList = new ArrayList<>();
+    public static List<InvoiceWrapper> loadAllInvoices(Context context) {
+        List<InvoiceWrapper> invoiceList = new ArrayList<>();
         File folder = context.getExternalFilesDir("Invoices");
 
         if (folder == null || !folder.exists()) {
@@ -54,7 +54,7 @@ public class InvoiceUtils {
             try (FileInputStream fileIn = new FileInputStream(file);
                  ObjectInputStream in = new ObjectInputStream(fileIn)) {
 
-                Invoice invoice = (Invoice) in.readObject();
+                InvoiceWrapper invoice = (InvoiceWrapper) in.readObject();
                 invoiceList.add(invoice);
 
             } catch (IOException | ClassNotFoundException e) {
@@ -72,9 +72,7 @@ public class InvoiceUtils {
             return false;
         }
 
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd_HH-mm-ss");
-        String formattedDate = invoice.getDate().format(formatter);
-        String fileName = invoice.getInvoiceID() + "_" + formattedDate + ".ser";
+        String fileName = invoice.getInvoiceID() + ".ser";
 
         File file = new File(folder, fileName);
         if (file.exists()) {
@@ -90,5 +88,40 @@ public class InvoiceUtils {
             return false;
         }
     }
+
+    public static boolean updateInvoiceInStorage(Context context, InvoiceWrapper updatedInvoiceWrapper) {
+        File folder = context.getExternalFilesDir("Invoices");
+        if (folder == null || !folder.exists()) {
+            Toast.makeText(context, "Fehler: Rechnungsordner nicht vorhanden.", Toast.LENGTH_SHORT).show();
+            return false;
+        }
+
+        Invoice updatedInvoice = updatedInvoiceWrapper.getInvoice();
+        String fileName = updatedInvoice.getInvoiceID() + ".ser";
+        File file = new File(folder, fileName);
+
+        // Alte Datei löschen (wenn vorhanden)
+        if (file.exists()) {
+            boolean deleted = file.delete();
+            if (!deleted) {
+                Toast.makeText(context, "Fehler beim Löschen der alten Rechnung.", Toast.LENGTH_SHORT).show();
+                return false;
+            }
+        }
+
+        // Neue Version speichern
+        try (FileOutputStream fileOut = new FileOutputStream(file);
+             ObjectOutputStream out = new ObjectOutputStream(fileOut)) {
+
+            out.writeObject(updatedInvoiceWrapper);
+            Toast.makeText(context, "Rechnung erfolgreich aktualisiert.", Toast.LENGTH_SHORT).show();
+            return true;
+
+        } catch (IOException e) {
+            Toast.makeText(context, "Fehler beim Speichern der aktualisierten Rechnung.", Toast.LENGTH_SHORT).show();
+            return false;
+        }
+    }
+
 
 }
