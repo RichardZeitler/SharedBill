@@ -1,5 +1,9 @@
 package htw.university.sharedbill.model.invoice;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
@@ -9,6 +13,8 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+
 
 public class EateryInvoice implements Invoice, Serializable {
     private Address issuer;
@@ -209,4 +215,62 @@ public class EateryInvoice implements Invoice, Serializable {
         this.date = LocalDateTime.parse(creationDateString);
     }
 
+    public JSONObject getJSONObject() throws JSONException {
+        JSONObject json = new JSONObject();
+        json.put("invoiceID", invoiceID);
+        json.put("netPrice", netPrice);
+        json.put("grossPrice", grossPrice);
+        json.put("taxPrice", taxPrice);
+        json.put("paymentMethod", paymentMethod);
+        json.put("date", date.toString()); // oder date.format(...)
+        json.put("vatID", vatID);
+        json.put("transactionID", trnsactionID);
+        json.put("checkSum", checkSum);
+        json.put("deviceID", deviceID);
+        json.put("issuer", issuer.getJSONObject());
+
+        JSONArray itemsArray = new JSONArray();
+        for (Map.Entry<Item, Integer> entry : items.entrySet()) {
+            JSONObject itemJson = entry.getKey().getJSONObject();
+            itemJson.put("quantity", entry.getValue());
+            itemsArray.put(itemJson);
+        }
+        json.put("items", itemsArray);
+
+        return json;
+    }
+
+
+    public static EateryInvoice fromJSONObject(JSONObject json) throws JSONException {
+        EateryInvoice invoice = new EateryInvoice();
+
+        invoice.setInvoiceID(json.getString("invoiceID"));
+        invoice.setNetPrice(json.getDouble("netPrice"));
+        invoice.setGrossPrice(json.getDouble("grossPrice"));
+        invoice.setTaxPrice(json.getDouble("taxPrice"));
+        invoice.setPaymentMethod(json.getString("paymentMethod"));
+        invoice.setVatID(json.getString("vatID"));
+        invoice.setTrnsactionID(json.getString("transactionID"));
+        invoice.setCheckSum(json.getString("checkSum"));
+        invoice.setDeviceID(json.getString("deviceID"));
+        invoice.setDate(LocalDateTime.parse(json.getString("date")));
+
+        // issuer
+        JSONObject issuerJson = json.getJSONObject("issuer");
+        invoice.setIssuer(Address.fromJSONObject(issuerJson));
+
+        // items
+        JSONArray itemsArray = json.getJSONArray("items");
+        for (int i = 0; i < itemsArray.length(); i++) {
+            JSONObject entry = itemsArray.getJSONObject(i);
+            int quantity = entry.getInt("quantity");
+
+            Item item = Item.fromJSONObject(entry);
+            for (int q = 0; q < quantity; q++) {
+                invoice.addItem(item);
+            }
+        }
+
+        return invoice;
+    }
 }

@@ -13,6 +13,7 @@ import androidx.core.view.WindowInsetsCompat;
 import java.util.List;
 
 import htw.university.sharedbill.R;
+import htw.university.sharedbill.controller.bluetooth.SelectDeviceActivity;
 import htw.university.sharedbill.model.invoice.InvoiceUtils;
 import htw.university.sharedbill.model.invoice.InvoiceWrapper;
 
@@ -37,11 +38,20 @@ public class StartActivity extends AppCompatActivity {
         createInvoiceButton.setOnClickListener(v -> {
             Intent intent = new Intent(StartActivity.this, CreateInvoiceActivity.class);
             startActivity(intent);
+
         });
 
         ConstraintLayout invoiceHistory = findViewById(R.id.invoiceHistoryButton);
         invoiceHistory.setOnClickListener(v -> {
             Intent intent = new Intent(StartActivity.this, InvoiceHistoryActivity.class);
+            startActivity(intent);
+        });
+
+        ConstraintLayout searchDevices = findViewById(R.id.searchDevicesButton);
+        searchDevices.setOnClickListener(v -> {
+            Intent intent = new Intent(StartActivity.this, SelectDeviceActivity.class);
+            intent.putExtra("title", "Bluetooth-Geräte suchen");
+            intent.putExtra("disableShareInvoice", true);
             startActivity(intent);
         });
     }

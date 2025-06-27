@@ -2,6 +2,7 @@ package htw.university.sharedbill.adapter;
 
 import android.content.Context;
 import android.content.Intent;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
@@ -19,6 +20,7 @@ import java.util.Arrays;
 import java.util.List;
 
 import htw.university.sharedbill.R;
+import htw.university.sharedbill.controller.bluetooth.SelectDeviceActivity;
 import htw.university.sharedbill.controller.invoce.InvoiceShowAcitivity;
 import htw.university.sharedbill.model.invoice.Invoice;
 import htw.university.sharedbill.model.invoice.InvoiceUtils;
@@ -82,14 +84,19 @@ public class InvoiceAdapter extends RecyclerView.Adapter<InvoiceAdapter.InvoiceV
     private boolean handleMenuAction(MenuItem item, InvoiceWrapper invoiceWrapper, int position) {
         Invoice invoice = invoiceWrapper.getInvoice();
         String title = item.getTitle().toString();
+        Intent intent = null;
         switch (title) {
             case "Anzeigen":
-                Intent intent = new Intent(context, InvoiceShowAcitivity.class);
+                intent = new Intent(context, InvoiceShowAcitivity.class);
                 intent.putExtra("invoice", (Serializable) invoiceWrapper);
                 context.startActivity(intent);
                 return true;
             case "Teilen":
-                Toast.makeText(context, "In Entwicklung: " + invoice.getInvoiceID(), Toast.LENGTH_SHORT).show();
+                intent = new Intent(context, SelectDeviceActivity.class);
+                intent.putExtra("title", "Verbundene Bluetooth-Geräte");
+                intent.putExtra("disableScan", true);
+                intent.putExtra("invoice", (Serializable) invoiceWrapper);
+                context.startActivity(intent);
                 return true;
             case "Löschen":
                 boolean deleted = InvoiceUtils.deleteInvoiceFromStorage(context, invoice);

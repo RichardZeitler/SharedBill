@@ -3,13 +3,15 @@ package htw.university.sharedbill.model.invoice;
 import android.content.Context;
 import android.widget.Toast;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
+import java.io.FileReader;
+import java.io.FileWriter;
 import java.io.IOException;
-import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -23,18 +25,15 @@ public class InvoiceUtils {
         }
 
         Invoice invoice = invoiceWrapper.getInvoice();
-
-
-        String fileName = invoice.getInvoiceID() + ".ser";
+        String fileName = invoice.getInvoiceID() + ".json";
         File file = new File(folder, fileName);
 
-        try (FileOutputStream fileOut = new FileOutputStream(file);
-             ObjectOutputStream out = new ObjectOutputStream(fileOut)) {
-
-            out.writeObject(invoiceWrapper);
-
-        } catch (IOException e) {
+        try (BufferedWriter writer = new BufferedWriter(new FileWriter(file))) {
+            JSONObject json = invoiceWrapper.getJSONObject();
+            writer.write(json.toString(4)); // mit Einrückung für bessere Lesbarkeit
+        } catch (IOException | JSONException e) {
             Toast.makeText(context, "Fehler beim Speichern der Rechnung.", Toast.LENGTH_SHORT).show();
+            e.printStackTrace();
         }
     }
 
@@ -47,18 +46,23 @@ public class InvoiceUtils {
             return invoiceList;
         }
 
-        File[] files = folder.listFiles((dir, name) -> name.endsWith(".ser"));
+        File[] files = folder.listFiles((dir, name) -> name.endsWith(".json"));
         if (files == null) return invoiceList;
 
         for (File file : files) {
-            try (FileInputStream fileIn = new FileInputStream(file);
-                 ObjectInputStream in = new ObjectInputStream(fileIn)) {
+            try (BufferedReader reader = new BufferedReader(new FileReader(file))) {
+                StringBuilder jsonStringBuilder = new StringBuilder();
+                String line;
+                while ((line = reader.readLine()) != null) {
+                    jsonStringBuilder.append(line);
+                }
+                JSONObject json = new JSONObject(jsonStringBuilder.toString());
+                InvoiceWrapper invoiceWrapper = InvoiceWrapper.fromJSONObject(json);
+                invoiceList.add(invoiceWrapper);
 
-                InvoiceWrapper invoice = (InvoiceWrapper) in.readObject();
-                invoiceList.add(invoice);
-
-            } catch (IOException | ClassNotFoundException e) {
+            } catch (IOException | JSONException e) {
                 Toast.makeText(context, "Fehler beim Laden der Datei: " + file.getName(), Toast.LENGTH_SHORT).show();
+                e.printStackTrace();
             }
         }
         Toast.makeText(context, "Anzahl geladener Rechnungen: " + invoiceList.size(), Toast.LENGTH_SHORT).show();
@@ -72,7 +76,7 @@ public class InvoiceUtils {
             return false;
         }
 
-        String fileName = invoice.getInvoiceID() + ".ser";
+        String fileName = invoice.getInvoiceID() + ".json";
 
         File file = new File(folder, fileName);
         if (file.exists()) {
@@ -97,10 +101,9 @@ public class InvoiceUtils {
         }
 
         Invoice updatedInvoice = updatedInvoiceWrapper.getInvoice();
-        String fileName = updatedInvoice.getInvoiceID() + ".ser";
+        String fileName = updatedInvoice.getInvoiceID() + ".json";
         File file = new File(folder, fileName);
 
-        // Alte Datei löschen (wenn vorhanden)
         if (file.exists()) {
             boolean deleted = file.delete();
             if (!deleted) {
@@ -109,19 +112,15 @@ public class InvoiceUtils {
             }
         }
 
-        // Neue Version speichern
-        try (FileOutputStream fileOut = new FileOutputStream(file);
-             ObjectOutputStream out = new ObjectOutputStream(fileOut)) {
-
-            out.writeObject(updatedInvoiceWrapper);
+        try (BufferedWriter writer = new BufferedWriter(new FileWriter(file))) {
+            JSONObject json = updatedInvoiceWrapper.getJSONObject();
+            writer.write(json.toString(4));
             Toast.makeText(context, "Rechnung erfolgreich aktualisiert.", Toast.LENGTH_SHORT).show();
             return true;
-
-        } catch (IOException e) {
+        } catch (IOException | JSONException e) {
             Toast.makeText(context, "Fehler beim Speichern der aktualisierten Rechnung.", Toast.LENGTH_SHORT).show();
+            e.printStackTrace();
             return false;
         }
     }
-
-
 }

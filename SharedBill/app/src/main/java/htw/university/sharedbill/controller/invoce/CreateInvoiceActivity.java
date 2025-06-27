@@ -56,6 +56,7 @@ public class CreateInvoiceActivity extends AppCompatActivity implements InvoiceO
     private EditText editDeviceId;
     private EditText editPaymentMethod;
     private ViewGroup root;
+    private Button createInvoiceButton;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -69,31 +70,8 @@ public class CreateInvoiceActivity extends AppCompatActivity implements InvoiceO
             return insets;
         });
 
-        root = findViewById(R.id.createInvoice);
+        initViews();
 
-        itemContainer = findViewById(R.id.itemContainer);
-        editItemName = findViewById(R.id.editItemName);
-        editItemDescription = findViewById(R.id.editItemDescription);
-        editItemGrossPrice = findViewById(R.id.editItemGrossPrice);
-        editItemTaxRate = findViewById(R.id.editItemTaxRate);
-        showTotalPrice = findViewById(R.id.showTotalPrice);
-        editTotalGrossPrice = findViewById(R.id.editTotalGrossPrice);
-        editTotalNetPrice = findViewById(R.id.editTotalNetPrice);
-        editTotalTaxPrice = findViewById(R.id.editTotalTaxPrice);
-        editIssuerName = findViewById(R.id.editIssuerName);
-        editIssuerStreet = findViewById(R.id.editIssuerStreet);
-        editIssuerZip = findViewById(R.id.editIssuerZip);
-        editIssuerCity = findViewById(R.id.editIssuerCity);
-        editIssuerCountry = findViewById(R.id.editIssuerCountry);
-        editInvoiceId = findViewById(R.id.editInvoiceId);
-        editDate = findViewById(R.id.editDate);
-        editVatId = findViewById(R.id.editVatId);
-        editTransactionId = findViewById(R.id.editTransactionId);
-        editCheckSum = findViewById(R.id.editCheckSum);
-        editDeviceId = findViewById(R.id.editDeviceId);
-        editPaymentMethod = findViewById(R.id.editPaymentMethod);
-
-        Button createInvoiceButton = findViewById(R.id.addInvoice);
         createInvoiceButton.setOnClickListener(v -> {
             createInvoice();
             if (eateryInvoice.isValid()) {
@@ -116,6 +94,33 @@ public class CreateInvoiceActivity extends AppCompatActivity implements InvoiceO
         eateryInvoice = new EateryInvoice();
         eateryInvoice.addObserver(this);
     }
+
+    private void initViews() {
+        createInvoiceButton = findViewById(R.id.addInvoice);
+        root = findViewById(R.id.createInvoice);
+        itemContainer = findViewById(R.id.itemContainer);
+        editItemName = findViewById(R.id.editItemName);
+        editItemDescription = findViewById(R.id.editItemDescription);
+        editItemGrossPrice = findViewById(R.id.editItemGrossPrice);
+        editItemTaxRate = findViewById(R.id.editItemTaxRate);
+        showTotalPrice = findViewById(R.id.showTotalPrice);
+        editTotalGrossPrice = findViewById(R.id.editTotalGrossPrice);
+        editTotalNetPrice = findViewById(R.id.editTotalNetPrice);
+        editTotalTaxPrice = findViewById(R.id.editTotalTaxPrice);
+        editIssuerName = findViewById(R.id.editIssuerName);
+        editIssuerStreet = findViewById(R.id.editIssuerStreet);
+        editIssuerZip = findViewById(R.id.editIssuerZip);
+        editIssuerCity = findViewById(R.id.editIssuerCity);
+        editIssuerCountry = findViewById(R.id.editIssuerCountry);
+        editInvoiceId = findViewById(R.id.editInvoiceId);
+        editDate = findViewById(R.id.editDate);
+        editVatId = findViewById(R.id.editVatId);
+        editTransactionId = findViewById(R.id.editTransactionId);
+        editCheckSum = findViewById(R.id.editCheckSum);
+        editDeviceId = findViewById(R.id.editDeviceId);
+        editPaymentMethod = findViewById(R.id.editPaymentMethod);
+    }
+
 
     public void addItem() {
         try {

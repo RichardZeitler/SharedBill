@@ -1,5 +1,8 @@
 package htw.university.sharedbill.model.invoice;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.io.Serializable;
 
 public class Item implements Serializable {
@@ -104,4 +107,47 @@ public class Item implements Serializable {
                 description.equals(other.description);
     }
 
+    public JSONObject getJSONObject() throws JSONException {
+        JSONObject json = new JSONObject();
+
+        json.put("name", name);
+        json.put("description", description);
+        json.put("netPrice", netPrice);
+        json.put("grossPrice", grossPrice);
+        json.put("taxPrice", taxPrice);
+        json.put("taxRate", taxRate);
+
+        return json;
+    }
+
+    public static Item fromJSONObject(JSONObject json) throws JSONException {
+        String name = json.getString("name");
+        String description = json.optString("description", "keine");
+        double netPrice = json.getDouble("netPrice");
+        double grossPrice = json.getDouble("grossPrice");
+        double taxPrice = json.getDouble("taxPrice");
+        double taxRate = json.getDouble("taxRate");
+
+        Item item = new Item(name, description, grossPrice, taxRate);
+        item.setNetPrice(netPrice);
+        item.setTaxPrice(taxPrice);
+        return item;
+    }
+
+    @Override
+    public int hashCode() {
+        int result;
+        long temp;
+        result = name.hashCode();
+        result = 31 * result + description.hashCode();
+        temp = Double.doubleToLongBits(netPrice);
+        result = 31 * result + (int) (temp ^ (temp >>> 32));
+        temp = Double.doubleToLongBits(grossPrice);
+        result = 31 * result + (int) (temp ^ (temp >>> 32));
+        temp = Double.doubleToLongBits(taxPrice);
+        result = 31 * result + (int) (temp ^ (temp >>> 32));
+        temp = Double.doubleToLongBits(taxRate);
+        result = 31 * result + (int) (temp ^ (temp >>> 32));
+        return result;
+    }
 }

@@ -43,4 +43,14 @@
         libero vel nunc consequat, quis tincidunt nisl eleifend. Cras bibendum enim a justo luctus
         vestibulum. Fusce dictum libero quis erat maximus, vitae volutpat diam dignissim.
     </string>
+    <string name="scan_start">Scan starten</string>
+    <string name="scan_stop">Scan stoppen</string>
+    <string name="bluetooth_not_available">Bluetooth nicht verfügbar</string>
+    <string name="bluetooth_client_not_ready">Bluetooth-Client nicht bereit</string>
+    <string name="connecting_to">Verbinde mit: %1$s</string>
+    <string name="invoice_not_found">Rechnung nicht gefunden</string>
+    <string name="error_sending_invoice">Fehler beim Senden der Rechnung</string>
+    <string name="unknown_device">Unbekanntes Gerät</string>
+    <string name="scan_finished">Scan abgeschlossen</string>
+
 </resources>

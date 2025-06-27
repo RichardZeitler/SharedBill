@@ -1,5 +1,8 @@
 package htw.university.sharedbill.model.invoice;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -20,4 +23,9 @@ public interface Invoice {
     String getCheckSum();
     void addItem(Item item);
     void removeItem(Item item);
+    JSONObject getJSONObject() throws JSONException;
+
+    static Invoice fromJSONObject(JSONObject json) throws JSONException {
+        return EateryInvoice.fromJSONObject(json);
+    }
 }

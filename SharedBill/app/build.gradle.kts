@@ -8,8 +8,8 @@ android {
 
     defaultConfig {
         applicationId = "htw.university.sharedbill"
-        minSdk = 31
-        targetSdk = 34
+        minSdk = 30
+        targetSdk = 35
         versionCode = 1
         versionName = "1.0"
 
@@ -35,17 +35,23 @@ android {
 }
 
 dependencies {
-    implementation(libs.appcompat) {
-        exclude(group = "androidx.coordinatorlayout", module = "coordinatorlayout")
-    }
+    implementation(libs.appcompat) { exclude(group = "androidx.coordinatorlayout", module = "coordinatorlayout") }
     implementation(libs.material)
     implementation(libs.constraintlayout)
-    implementation(libs.navigation.fragment) {
-        exclude(group = "androidx.coordinatorlayout", module = "coordinatorlayout")
-    }
+    implementation(libs.navigation.fragment) { exclude(group = "androidx.coordinatorlayout", module = "coordinatorlayout") }
     implementation(libs.navigation.ui)
     implementation(libs.activity)
-    testImplementation(libs.junit)
+    testImplementation("junit:junit:4.13.2")
+    testImplementation("org.robolectric:robolectric:4.10.3")
+    testImplementation("org.mockito:mockito-core:4.+")
+    androidTestImplementation("androidx.test:runner:1.5.2")
+    androidTestImplementation("androidx.test.ext:junit:1.1.5")
+    androidTestImplementation("androidx.test.espresso:espresso-core:3.5.1")
+    androidTestImplementation ("androidx.test.espresso:espresso-contrib:3.5.1")
+
+
     androidTestImplementation(libs.ext.junit)
     androidTestImplementation(libs.espresso.core)
 }
+
+

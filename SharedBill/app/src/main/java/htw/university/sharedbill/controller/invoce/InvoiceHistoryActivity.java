@@ -30,6 +30,7 @@ public class InvoiceHistoryActivity extends AppCompatActivity {
             return insets;
         });
 
+
         invoiceRecyclerView = findViewById(R.id.invoiceRecyclerView);
         invoiceRecyclerView.setLayoutManager(new LinearLayoutManager(this));
 

@@ -2,6 +2,9 @@ package htw.university.sharedbill.model.invoice;
 
 import androidx.annotation.NonNull;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.io.Serializable;
 
 public class Address implements Serializable {
@@ -86,5 +89,26 @@ public class Address implements Serializable {
                 ", city='" + city + '\'' +
                 ", country='" + country + '\'' +
                 '}';
+    }
+
+    public JSONObject getJSONObject() throws JSONException {
+        JSONObject json = new JSONObject();
+
+        json.put("name", name);
+        json.put("street", street);
+        json.put("zip", zip);
+        json.put("city", city);
+        json.put("country", country);
+
+        return json;
+    }
+
+    public static Address fromJSONObject(JSONObject json) throws JSONException {
+        String name = json.getString("name");
+        String street = json.getString("street");
+        int zip = json.getInt("zip");
+        String city = json.getString("city");
+        String country = json.getString("country");
+        return new Address(name, street, zip, city, country);
     }
 }

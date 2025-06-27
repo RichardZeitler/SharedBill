@@ -1,6 +1,7 @@
 package htw.university.sharedbill.model.invoice;
 
-import androidx.annotation.Nullable;
+import org.json.JSONObject;
+import org.json.JSONException;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -12,12 +13,10 @@ public class InvoiceWrapper implements Serializable {
 
     public static List<InvoiceWrapper> INVOICES = new ArrayList<>();
 
-
     public InvoiceWrapper(Invoice invoice, String paymentStatus) {
         setInvoice(invoice);
         setPaymentStatus(paymentStatus);
     }
-
 
     private void setInvoice(Invoice invoice) {
         if (invoice == null) throw new IllegalArgumentException("[InvoiceWrapper] Rechnung ist ungültig.");
@@ -25,7 +24,8 @@ public class InvoiceWrapper implements Serializable {
     }
 
     public void setPaymentStatus(String paymentStatus) {
-        if (paymentStatus == null || paymentStatus.isEmpty()) throw new IllegalArgumentException("[InvoiceWrapper] Rechnungstatus ist ungültig.");
+        if (paymentStatus == null || paymentStatus.isEmpty())
+            throw new IllegalArgumentException("[InvoiceWrapper] Rechnungstatus ist ungültig.");
         this.paymentStatus = paymentStatus;
     }
 
@@ -51,4 +51,19 @@ public class InvoiceWrapper implements Serializable {
         return invoice != null ? invoice.getInvoiceID().hashCode() : 0;
     }
 
+    public JSONObject getJSONObject() throws JSONException {
+        JSONObject json = new JSONObject();
+
+        json.put("paymentStatus", paymentStatus);
+        json.put("invoice", invoice.getJSONObject());
+
+        return json;
+    }
+
+    public static InvoiceWrapper fromJSONObject(JSONObject json) throws JSONException {
+        String status = json.getString("paymentStatus");
+        JSONObject invoiceJson = json.getJSONObject("invoice");
+        Invoice inv = Invoice.fromJSONObject(invoiceJson);
+        return new InvoiceWrapper(inv, status);
+    }
 }
