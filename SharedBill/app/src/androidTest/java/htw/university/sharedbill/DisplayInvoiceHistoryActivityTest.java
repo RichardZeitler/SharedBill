@@ -2,7 +2,6 @@ package htw.university.sharedbill;
 
 import static androidx.test.espresso.Espresso.onView;
 import static androidx.test.espresso.action.ViewActions.click;
-import static androidx.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static androidx.test.espresso.matcher.ViewMatchers.withId;
 import static androidx.test.espresso.assertion.ViewAssertions.matches;
 import static androidx.test.espresso.matcher.ViewMatchers.withText;
@@ -14,7 +13,7 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
-import htw.university.sharedbill.controller.invoce.StartActivity;
+import htw.university.sharedbill.controller.StartActivity;
 
 /**
  * Instrumentationstest für das Öffnen der Rechnungshistorie

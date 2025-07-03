@@ -21,6 +21,7 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
+            android:textColor="@color/black"
             android:text="Rechnung"
             android:textSize="18sp"
             android:textStyle="bold" />
@@ -30,6 +31,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_margin="16dp"
+
             android:text="Unbezahlt"
             android:background="@drawable/border_rounded_black"
             android:padding="10dp"

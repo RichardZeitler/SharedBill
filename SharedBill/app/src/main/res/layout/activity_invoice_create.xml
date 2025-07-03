@@ -66,10 +66,12 @@
 
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:layout_width="match_parent"
+                android:background="@color/white"
                 android:layout_height="match_parent">
 
                 <TextView
                     android:id="@+id/textView15"
+                    android:textColor="@color/black"
                     android:layout_width="wrap_content"
                     android:layout_height="30dp"
                     android:layout_marginStart="20dp"
@@ -83,6 +85,7 @@
                 <EditText
                     android:id="@+id/editInvoiceId"
                     android:layout_width="0dp"
+                    android:textColorHint="@android:color/darker_gray"
                     android:layout_height="30dp"
                     android:layout_marginTop="20dp"
                     android:layout_marginEnd="20dp"
@@ -106,6 +109,8 @@
 
                 <TextView
                     android:id="@+id/textView17"
+                    android:textColor="@color/black"
+
                     android:layout_width="wrap_content"
                     android:layout_height="30dp"
                     android:layout_marginStart="20dp"
@@ -119,6 +124,7 @@
                 <EditText
                     android:id="@+id/editIssuerName"
                     android:layout_width="0dp"
+                    android:textColorHint="@android:color/darker_gray"
                     android:layout_height="30dp"
                     android:layout_marginTop="20dp"
                     android:layout_marginEnd="20dp"
@@ -134,6 +140,7 @@
                     android:id="@+id/editIssuerStreet"
                     android:layout_width="0dp"
                     android:layout_height="30dp"
+                    android:textColorHint="@android:color/darker_gray"
                     android:layout_marginTop="5dp"
                     android:layout_marginEnd="20dp"
                     android:width="150dp"
@@ -151,6 +158,7 @@
                     android:layout_height="30dp"
                     android:layout_marginTop="5dp"
                     android:layout_marginEnd="20dp"
+                    android:textColorHint="@android:color/darker_gray"
                     android:width="150dp"
                     android:background="@drawable/border_rounded_black"
                     android:gravity="center"
@@ -168,6 +176,7 @@
                     android:layout_marginTop="5dp"
                     android:layout_marginEnd="20dp"
                     android:width="150dp"
+                    android:textColorHint="@android:color/darker_gray"
                     android:background="@drawable/border_rounded_black"
                     android:gravity="center"
                     android:hint="City"
@@ -184,6 +193,7 @@
                     android:layout_marginEnd="20dp"
                     android:background="@drawable/border_rounded_black"
                     android:gravity="center"
+                    android:textColorHint="@android:color/darker_gray"
                     android:hint="Country"
                     android:textSize="15sp"
                     app:layout_constraintEnd_toEndOf="parent"
@@ -202,6 +212,8 @@
 
                 <TextView
                     android:id="@+id/textView18"
+                    android:textColor="@color/black"
+
                     android:layout_width="wrap_content"
                     android:layout_height="30dp"
                     android:layout_marginStart="20dp"
@@ -214,6 +226,7 @@
 
                 <TextView
                     android:id="@+id/textView19"
+                    android:textColor="@color/black"
                     android:layout_width="wrap_content"
                     android:layout_height="30dp"
                     android:layout_marginStart="20dp"
@@ -226,6 +239,7 @@
 
                 <TextView
                     android:id="@+id/textView20"
+                    android:textColor="@color/black"
                     android:layout_width="wrap_content"
                     android:layout_height="30dp"
                     android:layout_marginStart="20dp"
@@ -238,6 +252,7 @@
 
                 <TextView
                     android:id="@+id/textView21"
+                    android:textColor="@color/black"
                     android:layout_width="wrap_content"
                     android:layout_height="30dp"
                     android:layout_marginStart="20dp"
@@ -255,6 +270,7 @@
                     android:layout_marginStart="20dp"
                     android:layout_marginTop="5dp"
                     android:text="Country:"
+                    android:textColor="@color/black"
                     android:textSize="20sp"
                     android:textStyle="bold"
                     app:layout_constraintStart_toStartOf="parent"
@@ -267,6 +283,7 @@
                     android:layout_marginStart="20dp"
                     android:layout_marginTop="20dp"
                     android:text="Add Item"
+                    android:textColor="@color/black"
                     android:textSize="20sp"
                     android:textStyle="bold"
                     app:layout_constraintStart_toStartOf="parent"
@@ -279,6 +296,7 @@
                     android:layout_marginStart="20dp"
                     android:layout_marginTop="20dp"
                     android:text="Name:"
+                    android:textColor="@color/black"
                     android:textSize="20sp"
                     android:textStyle="bold"
                     app:layout_constraintStart_toStartOf="parent"
@@ -293,6 +311,7 @@
                     android:text="Description:"
                     android:textSize="20sp"
                     android:textStyle="bold"
+                    android:textColor="@color/black"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@+id/textView24" />
 
@@ -304,6 +323,7 @@
                     android:layout_marginTop="5dp"
                     android:text="Grossprice:"
                     android:textSize="20sp"
+                    android:textColor="@color/black"
                     android:textStyle="bold"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@+id/textView25" />
@@ -316,6 +336,7 @@
                     android:layout_marginTop="5dp"
                     android:text="Taxrate:"
                     android:textSize="20sp"
+                    android:textColor="@color/black"
                     android:textStyle="bold"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@+id/textView26" />
@@ -328,6 +349,7 @@
                     android:layout_marginEnd="20dp"
                     android:background="@drawable/border_rounded_black"
                     android:gravity="center"
+                    android:textColorHint="@android:color/darker_gray"
                     android:hint="Name"
                     android:textSize="15sp"
                     app:layout_constraintEnd_toEndOf="parent"
@@ -343,6 +365,7 @@
                     android:background="@drawable/border_rounded_black"
                     android:gravity="center"
                     android:hint="Description"
+                    android:textColorHint="@android:color/darker_gray"
                     android:textSize="15sp"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintTop_toBottomOf="@+id/editItemName"
@@ -358,6 +381,7 @@
                     android:gravity="center"
                     android:hint="Price"
                     android:inputType="numberDecimal"
+                    android:textColorHint="@android:color/darker_gray"
                     android:textSize="15sp"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintTop_toBottomOf="@+id/editItemDescription"
@@ -374,6 +398,7 @@
                     android:hint="Taxrate"
                     android:inputType="numberDecimal"
                     android:textSize="15sp"
+                    android:textColorHint="@android:color/darker_gray"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintTop_toBottomOf="@+id/editItemGrossPrice"
                     app:layout_constraintWidth_percent="0.3" />
@@ -395,6 +420,7 @@
                     android:layout_marginStart="20dp"
                     android:layout_marginTop="20dp"
                     android:text="Items:"
+                    android:textColor="@color/black"
                     android:textSize="20sp"
                     android:textStyle="bold"
                     app:layout_constraintStart_toStartOf="parent"
@@ -417,6 +443,7 @@
                     android:layout_marginTop="10dp"
                     android:layout_marginEnd="20dp"
                     android:backgroundTint="#3F51B5"
+                    android:textColor="@color/white"
                     android:text="Add Item"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintTop_toBottomOf="@+id/editItemTaxRate"
@@ -430,6 +457,7 @@
                     android:layout_marginTop="20dp"
                     android:text="Total Grossprice:"
                     android:textSize="20sp"
+                    android:textColor="@color/black"
                     android:textStyle="bold"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@+id/view4" />
@@ -443,6 +471,7 @@
                     android:text="Total Netprice:"
                     android:textSize="20sp"
                     android:textStyle="bold"
+                    android:textColor="@color/black"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@+id/textView28" />
 
@@ -455,6 +484,7 @@
                     android:text="Total Taxprice:"
                     android:textSize="20sp"
                     android:textStyle="bold"
+                    android:textColor="@color/black"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@+id/textView30" />
 
@@ -467,6 +497,7 @@
                     android:text="Paymentmethod:"
                     android:textSize="20sp"
                     android:textStyle="bold"
+                    android:textColor="@color/black"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@+id/textView31" />
 
@@ -479,6 +510,7 @@
                     android:background="@drawable/border_rounded_black"
                     android:gravity="center"
                     android:hint="Grossprice"
+                    android:textColorHint="@android:color/darker_gray"
                     android:focusable="false"
                     android:clickable="false"
                     android:cursorVisible="false"
@@ -498,6 +530,7 @@
                     android:background="@drawable/border_rounded_black"
                     android:gravity="center"
                     android:hint="Netprice"
+                    android:textColorHint="@android:color/darker_gray"
                     android:focusable="false"
                     android:clickable="false"
                     android:cursorVisible="false"
@@ -516,6 +549,7 @@
                     android:layout_marginEnd="20dp"
                     android:background="@drawable/border_rounded_black"
                     android:gravity="center"
+                    android:textColorHint="@android:color/darker_gray"
                     android:hint="Taxprice"
                     android:focusable="false"
                     android:clickable="false"
@@ -536,6 +570,7 @@
                     android:background="@drawable/border_rounded_black"
                     android:gravity="center"
                     android:hint="Paymentmethod"
+                    android:textColorHint="@android:color/darker_gray"
                     android:textSize="15sp"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintTop_toBottomOf="@+id/editTotalTaxPrice"
@@ -558,6 +593,7 @@
                     android:layout_marginStart="20dp"
                     android:layout_marginTop="20dp"
                     android:text="Date:"
+                    android:textColor="@color/black"
                     android:textSize="20sp"
                     android:textStyle="bold"
                     app:layout_constraintStart_toStartOf="parent"
@@ -573,6 +609,7 @@
                     android:gravity="center"
                     android:hint="Date"
                     android:textSize="15sp"
+                    android:textColorHint="@android:color/darker_gray"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintTop_toBottomOf="@+id/view5"
                     app:layout_constraintWidth_percent="0.3" />
@@ -595,6 +632,7 @@
                     android:layout_marginTop="20dp"
                     android:text="Vat ID:"
                     android:textSize="20sp"
+                    android:textColor="@color/black"
                     android:textStyle="bold"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@+id/view6" />
@@ -608,6 +646,7 @@
                     android:text="Transaction ID:"
                     android:textSize="20sp"
                     android:textStyle="bold"
+                    android:textColor="@color/black"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@+id/textView37" />
 
@@ -620,6 +659,7 @@
                     android:text="Checksum:"
                     android:textSize="20sp"
                     android:textStyle="bold"
+                    android:textColor="@color/black"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@+id/textView38" />
 
@@ -632,6 +672,7 @@
                     android:text="Device ID:"
                     android:textSize="20sp"
                     android:textStyle="bold"
+                    android:textColor="@color/black"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@+id/textView39" />
 
@@ -644,6 +685,7 @@
                     android:background="@drawable/border_rounded_black"
                     android:gravity="center"
                     android:hint="Vatid"
+                    android:textColorHint="@android:color/darker_gray"
                     android:textSize="15sp"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintTop_toBottomOf="@+id/view6"
@@ -658,6 +700,7 @@
                     android:background="@drawable/border_rounded_black"
                     android:gravity="center"
                     android:hint="TransactionID"
+                    android:textColorHint="@android:color/darker_gray"
                     android:textSize="15sp"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintTop_toBottomOf="@+id/editVatId"
@@ -673,6 +716,7 @@
                     android:gravity="center"
                     android:hint="Checksum"
                     android:textSize="15sp"
+                    android:textColorHint="@android:color/darker_gray"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintTop_toBottomOf="@+id/editTransactionId"
                     app:layout_constraintWidth_percent="0.3" />
@@ -686,6 +730,7 @@
                     android:background="@drawable/border_rounded_black"
                     android:gravity="center"
                     android:hint="DeviceID"
+                    android:textColorHint="@android:color/darker_gray"
                     android:textSize="15sp"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintTop_toBottomOf="@+id/editCheckSum"
@@ -695,27 +740,16 @@
                     android:id="@+id/addInvoice"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:layout_marginStart="20dp"
                     android:layout_marginTop="40dp"
-                    android:layout_marginBottom="80dp"
+                    android:layout_marginBottom="20dp"
                     android:backgroundTint="#3F51B5"
                     android:text="Add Invoice"
+                    android:textColor="@color/white"
                     app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@+id/textView40"
                     app:layout_constraintWidth_percent="0.4" />
-
-                <ImageView
-                    android:id="@+id/imageView"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="40dp"
-                    android:layout_marginEnd="20dp"
-                    android:layout_marginBottom="80dp"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/editDeviceId"
-                    app:srcCompat="@drawable/green_add" />
 
                 <LinearLayout
                     android:id="@+id/itemContainer"

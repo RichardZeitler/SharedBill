@@ -185,8 +185,18 @@ public class SimpleGattClient {
                 if (service != null) {
                     BluetoothGattCharacteristic characteristic = service.getCharacteristic(DATA_UUID);
                     if (characteristic != null) {
+                        currentCharacteristic = characteristic;
                         boolean notifyEnabled = gatt.setCharacteristicNotification(characteristic, true);
                         Log.d(TAG, "Notification aktiviert: " + notifyEnabled);
+                        try {
+                            JSONObject request = new JSONObject();
+                            request.put("toServer", true);
+                            request.put("toClient", false);
+                            request.put("cmd", "getMac");
+                            sendData(request);
+                        }catch (JSONException e) {
+
+                        }
                     } else {
                         Log.w(TAG, "Characteristic nicht gefunden");
                     }
@@ -206,14 +216,16 @@ public class SimpleGattClient {
                 String chunk = new String(characteristic.getValue(), StandardCharsets.UTF_8);
                 Log.d(TAG, "Chunk empfangen: " + chunk);
 
-                if (chunk.equals("<<START>>")) {
-                    receiving = true;
-                    incomingMessageBuffer.setLength(0);
-                    Log.d(TAG, "Nachricht Start erkannt");
-                } else if (chunk.equals("<<END>>")) {
-                    receiving = false;
-                    String fullMessage = incomingMessageBuffer.toString();
-                    Log.d(TAG, "Nachricht Ende erkannt, kompletter Inhalt: " + fullMessage);
+                // Füge den neuen Chunk an den Puffer an
+                incomingMessageBuffer.append(chunk);
+
+                String data = incomingMessageBuffer.toString();
+
+                int start, end;
+                // Solange wir vollständige Nachrichten im Puffer haben: Verarbeite sie
+                while ((start = data.indexOf("<<START>>")) != -1 && (end = data.indexOf("<<END>>")) != -1 && end > start) {
+                    String fullMessage = data.substring(start + "<<START>>".length(), end).trim();
+                    Log.d(TAG, "Nachricht komplett erkannt: " + fullMessage);
 
                     try {
                         JSONObject json = new JSONObject(fullMessage);
@@ -221,13 +233,17 @@ public class SimpleGattClient {
                     } catch (JSONException e) {
                         Log.e(TAG, "JSON Parsing Fehler", e);
                     }
-                } else if (receiving) {
-                    incomingMessageBuffer.append(chunk);
-                } else {
-                    Log.w(TAG, "Paket empfangen ohne Startsignal - ignoriert: " + chunk);
+
+                    // Entferne die verarbeitete Nachricht aus dem Puffer
+                    data = data.substring(end + "<<END>>".length());
                 }
+
+                // Aktualisiere den Puffer mit evtl. noch unvollständigen Daten
+                incomingMessageBuffer.setLength(0);
+                incomingMessageBuffer.append(data);
             }
         }
+
 
         // **Wichtig: neuer Callback für sequentielles Schreiben**
         @Override
@@ -253,43 +269,32 @@ public class SimpleGattClient {
     }
 
     @SuppressLint("MissingPermission")
-    public void sendData(@NonNull JSONObject json) {
-        if (bluetoothGatt == null || !connected) {
-            Log.w(TAG, "Keine GATT-Verbindung vorhanden");
-            return;
-        }
-
-        BluetoothGattService service = bluetoothGatt.getService(targetServiceUuid);
-        if (service == null) {
-            Log.w(TAG, "Service nicht gefunden");
-            return;
-        }
-
-        currentCharacteristic = service.getCharacteristic(DATA_UUID);
-        if (currentCharacteristic == null) {
-            Log.w(TAG, "Characteristic nicht gefunden");
-            return;
-        }
-
-        // Nachricht vorbereiten
+    public synchronized void sendData(@NonNull JSONObject json) {
         String message = json.toString();
         byte[] msgBytes = message.getBytes(StandardCharsets.UTF_8);
         final int CHUNK_SIZE = 20;
 
-        writeQueue.clear();
-
-        writeQueue.add("<<START>>".getBytes(StandardCharsets.UTF_8));
+        List<byte[]> newChunks = new ArrayList<>();
+        newChunks.add("<<START>>".getBytes(StandardCharsets.UTF_8));
         for (int i = 0; i < msgBytes.length; i += CHUNK_SIZE) {
             int end = Math.min(i + CHUNK_SIZE, msgBytes.length);
             byte[] chunk = new byte[end - i];
             System.arraycopy(msgBytes, i, chunk, 0, end - i);
-            writeQueue.add(chunk);
+            newChunks.add(chunk);
         }
-        writeQueue.add("<<END>>".getBytes(StandardCharsets.UTF_8));
+        newChunks.add("<<END>>".getBytes(StandardCharsets.UTF_8));
 
-        isWriting = false;
-        writeNextChunk();
+        if (isWriting) {
+            // Gerade senden, neue Chunks hinten anfügen
+            writeQueue.addAll(newChunks);
+        } else {
+            // Keine Sendung aktiv, neue Sendung starten
+            writeQueue.clear();
+            writeQueue.addAll(newChunks);
+            writeNextChunk();
+        }
     }
+
 
     @SuppressLint("MissingPermission")
     private void writeNextChunk() {

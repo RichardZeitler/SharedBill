@@ -2,6 +2,7 @@ package htw.university.sharedbill.controller.invoce;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
@@ -17,6 +18,9 @@ import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
+import org.json.JSONException;
+
+import java.io.IOException;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
@@ -27,14 +31,18 @@ import htw.university.sharedbill.model.invoice.Address;
 import htw.university.sharedbill.model.invoice.EateryInvoice;
 import htw.university.sharedbill.model.invoice.Invoice;
 import htw.university.sharedbill.model.invoice.InvoiceObserver;
-import htw.university.sharedbill.model.invoice.InvoiceUtils;
+import htw.university.sharedbill.model.invoice.StorageUtils;
 import htw.university.sharedbill.model.invoice.InvoiceWrapper;
 import htw.university.sharedbill.model.invoice.Item;
 
+/**
+ * Activity zum Erstellen einer neuen Rechnung.
+ * Diese Klasse ermöglicht das Erfassen von Rechnungsdaten,
+ * das Hinzufügen und Entfernen von Positionen sowie das Speichern der Rechnung.
+ */
 public class CreateInvoiceActivity extends AppCompatActivity implements InvoiceObserver {
     private EateryInvoice eateryInvoice;
     private LinearLayout itemContainer;
-
     private EditText editItemName;
     private EditText editItemDescription;
     private EditText editItemGrossPrice;
@@ -56,8 +64,13 @@ public class CreateInvoiceActivity extends AppCompatActivity implements InvoiceO
     private EditText editDeviceId;
     private EditText editPaymentMethod;
     private ViewGroup root;
-    private Button createInvoiceButton;
+    private Button createInvoiceButton, addItemButton;
 
+    /**
+     * Methode, die beim Erstellen der Activity aufgerufen wird.
+     * Initialisiert die Benutzeroberfläche und Listener.
+     * @param savedInstanceState vorheriger Zustand der Activity (kann null sein)
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -70,31 +83,15 @@ public class CreateInvoiceActivity extends AppCompatActivity implements InvoiceO
             return insets;
         });
 
-        initViews();
-
-        createInvoiceButton.setOnClickListener(v -> {
-            createInvoice();
-            if (eateryInvoice.isValid()) {
-                InvoiceWrapper invoiceWrapper = new InvoiceWrapper(eateryInvoice, "Unbezahlt");
-                if (!InvoiceWrapper.INVOICES.contains(invoiceWrapper)) {
-                    InvoiceWrapper.INVOICES.add(invoiceWrapper);
-                    InvoiceUtils.saveInvoiceToAppStorage(this, invoiceWrapper);
-                    clearAllEditTexts(root);
-                    showTotalPrice.setText("0€");
-                    Intent intent = new Intent(CreateInvoiceActivity.this, InvoiceHistoryActivity.class);
-                    startActivity(intent);            }
-                } else {
-                    Toast.makeText(this, "Rechnung existiert bereits.", Toast.LENGTH_SHORT).show();
-            }
-        });
-
-        Button addItemButton = findViewById(R.id.addItem);
-        addItemButton.setOnClickListener(v -> addItem());
-
         eateryInvoice = new EateryInvoice();
-        eateryInvoice.addObserver(this);
+
+        initViews();
+        initListeners();
     }
 
+    /**
+     * Initialisiert alle View-Elemente der Activity.
+     */
     private void initViews() {
         createInvoiceButton = findViewById(R.id.addInvoice);
         root = findViewById(R.id.createInvoice);
@@ -119,9 +116,48 @@ public class CreateInvoiceActivity extends AppCompatActivity implements InvoiceO
         editCheckSum = findViewById(R.id.editCheckSum);
         editDeviceId = findViewById(R.id.editDeviceId);
         editPaymentMethod = findViewById(R.id.editPaymentMethod);
+        addItemButton = findViewById(R.id.addItem);
     }
 
+    /**
+     * Initialisiert alle Listener für Buttons und beobachtet Änderungen an der Rechnung.
+     */
+    private void initListeners() {
+        eateryInvoice.addObserver(this);
+        addItemButton.setOnClickListener(v -> addItem());
 
+        createInvoiceButton.setOnClickListener(v -> {
+            createInvoice();
+
+            if (eateryInvoice.isValid()) {
+                InvoiceWrapper invoiceWrapper = new InvoiceWrapper(eateryInvoice, "Unbezahlt");
+                if (!InvoiceWrapper.INVOICES.contains(invoiceWrapper)) {
+                    try {
+                        StorageUtils.saveInvoiceToAppStorage(this, invoiceWrapper);
+                        InvoiceWrapper.INVOICES.add(invoiceWrapper);
+
+                        Intent intent = new Intent(CreateInvoiceActivity.this, InvoiceHistoryActivity.class);
+                        startActivity(intent);
+
+                        Log.i("CreateInvoiceController", "Rechnung wurde erstellt");
+                        Log.i("StorageUtils", "Rechnung wurde gespeichert.");
+                    } catch (IOException | JSONException e) {
+                        Log.e("CreateInvoiceController", "Das Speichern der Rechnung ist fehlgeschlagen");
+                    } finally {
+                        clearAllEditTexts(root);
+                        showTotalPrice.setText("0€");
+                    }
+                }
+            } else {
+                Toast.makeText(this, "Rechnung existiert bereits.", Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+
+    /**
+     * Fügt ein neues Item zur Rechnung hinzu und zeigt es in der UI an.
+     * Bei fehlerhaften Eingaben wird eine Fehlermeldung angezeigt.
+     */
     public void addItem() {
         try {
             String itemName = editItemName.getText().toString().trim();
@@ -145,7 +181,6 @@ public class CreateInvoiceActivity extends AppCompatActivity implements InvoiceO
 
             itemContainer.addView(itemView);
 
-
         } catch (NumberFormatException e) {
             Toast.makeText(this, "[Item] Bruttobetrag oder Mehrwertsteuer des Items ist ungültig.", Toast.LENGTH_SHORT).show();
         } catch (IllegalArgumentException e) {
@@ -158,24 +193,29 @@ public class CreateInvoiceActivity extends AppCompatActivity implements InvoiceO
             editItemName.setText("");
 
             Toast.makeText(this, "Item wurde hinzugefügt.", Toast.LENGTH_SHORT).show();
+            Log.i("CreateInvoiceController", "Item wurde hinzugefügt");
         }
     }
 
-    public void removeItem(View itemView, Item item) {
+    /**
+     * Entfernt ein Item aus der Rechnung und aus der UI.
+     *
+     * @param itemView die View des zu entfernenden Items
+     * @param item     das zu entfernende Item
+     */
+    private void removeItem(View itemView, Item item) {
         try {
             itemContainer.removeView(itemView);
             eateryInvoice.removeItem(item);
         } catch (Exception e) {
-            Toast.makeText(this, e.getMessage(), Toast.LENGTH_SHORT).show();
+            Log.e("CreateInvoiceController", e.getMessage());
         }
-
     }
 
-    private int dpToPx(int dp) {
-        float density = getResources().getDisplayMetrics().density;
-        return Math.round(dp * density);
-    }
-
+    /**
+     * Liest die Eingabefelder aus und befüllt die EateryInvoice mit den Daten.
+     * Zeigt Fehlermeldungen bei ungültigen Eingaben an.
+     */
     private void createInvoice() {
         try {
             eateryInvoice.setInvoiceID(editInvoiceId.getText().toString().trim());
@@ -185,31 +225,50 @@ public class CreateInvoiceActivity extends AppCompatActivity implements InvoiceO
             eateryInvoice.setCheckSum(editCheckSum.getText().toString().trim());
             eateryInvoice.setDeviceID(editDeviceId.getText().toString().trim());
 
-            String dateString = editDate.getText().toString().trim();
-            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd.MM.yyyy");
-            LocalDate date = LocalDate.parse(dateString, formatter);
-            LocalTime time = LocalTime.now().withNano(0);
+            eateryInvoice.setDate(parseInvoiceDate(editDate.getText().toString().trim()));
+            eateryInvoice.setIssuer(createIssuerAddress());
 
-            eateryInvoice.setDate(LocalDateTime.of(date, time));
-
-            String issuerName = editIssuerName.getText().toString().trim();
-            String issuerStreet = editIssuerStreet.getText().toString().trim();
-            int issuerZip = Integer.parseInt(editIssuerZip.getText().toString().trim());
-            String issuerCity = editIssuerCity.getText().toString().trim();
-            String issuerCountry = editIssuerCountry.getText().toString().trim();
-
-            Address issuer = new Address(issuerName, issuerStreet, issuerZip, issuerCity, issuerCountry);
-
-            eateryInvoice.setIssuer(issuer);
         } catch (NumberFormatException e) {
-            Toast.makeText(this, "[Address] Postleitzahl ist ungültig.", Toast.LENGTH_SHORT).show();
-        } catch (IllegalArgumentException e) {
-            Toast.makeText(this, e.getMessage(), Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, "[Adresse] Postleitzahl ist ungültig.", Toast.LENGTH_SHORT).show();
         } catch (Exception e) {
             Toast.makeText(this, e.getMessage(), Toast.LENGTH_SHORT).show();
         }
     }
 
+    /**
+     * Wandelt einen Datums-String im Format "dd.MM.yyyy" in ein LocalDateTime-Objekt um.
+     * Die Uhrzeit wird auf die aktuelle Uhrzeit gesetzt.
+     *
+     * @param dateString das Datum als String
+     * @return das LocalDateTime-Objekt mit Datum und aktueller Uhrzeit
+     */
+    private LocalDateTime parseInvoiceDate(String dateString) {
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd.MM.yyyy");
+        LocalDate date = LocalDate.parse(dateString, formatter);
+        LocalTime time = LocalTime.now().withNano(0);
+        return LocalDateTime.of(date, time);
+    }
+
+    /**
+     * Erstellt aus den Eingabefeldern eine Adresse für den Rechnungsaussteller.
+     *
+     * @return die Adresse des Ausstellers
+     * @throws NumberFormatException wenn die Postleitzahl ungültig ist
+     */
+    private Address createIssuerAddress() {
+        String issuerName = editIssuerName.getText().toString().trim();
+        String issuerStreet = editIssuerStreet.getText().toString().trim();
+        int issuerZip = Integer.parseInt(editIssuerZip.getText().toString().trim());
+        String issuerCity = editIssuerCity.getText().toString().trim();
+        String issuerCountry = editIssuerCountry.getText().toString().trim();
+        return new Address(issuerName, issuerStreet, issuerZip, issuerCity, issuerCountry);
+    }
+
+    /**
+     * Löscht alle EditText-Felder rekursiv aus einem ViewGroup-Container.
+     *
+     * @param root das Wurzel-ViewGroup-Element
+     */
     private void clearAllEditTexts(ViewGroup root) {
         for (int i = 0; i < root.getChildCount(); i++) {
             View child = root.getChildAt(i);
@@ -221,11 +280,17 @@ public class CreateInvoiceActivity extends AppCompatActivity implements InvoiceO
         }
     }
 
+    /**
+     * Wird aufgerufen, wenn sich die Rechnung ändert.
+     * Aktualisiert die Anzeige der Gesamtsummen.
+     *
+     * @param invoice die aktuelle Rechnung
+     */
     @Override
     public void updateInvoice(Invoice invoice) {
-        showTotalPrice.setText(String.format("%.2f", invoice.getGrossPrice()) + "€");
-        editTotalGrossPrice.setText(String.format("%.2f", invoice.getGrossPrice()) + "€");
-        editTotalNetPrice.setText(String.format("%.2f", invoice.getNetPrice()) + "€");
-        editTotalTaxPrice.setText(String.format("%.2f", invoice.getTaxPrice()) +"€");
+        showTotalPrice.setText(invoice.getGrossPrice() + "€");
+        editTotalGrossPrice.setText(invoice.getGrossPrice() + "€");
+        editTotalNetPrice.setText(invoice.getNetPrice() + "€");
+        editTotalTaxPrice.setText(invoice.getTaxPrice() +"€");
     }
 }

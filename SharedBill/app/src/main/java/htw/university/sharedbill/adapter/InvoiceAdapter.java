@@ -2,7 +2,6 @@ package htw.university.sharedbill.adapter;
 
 import android.content.Context;
 import android.content.Intent;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
@@ -15,15 +14,18 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import org.json.JSONException;
+
+import java.io.IOException;
 import java.io.Serializable;
 import java.util.Arrays;
 import java.util.List;
 
 import htw.university.sharedbill.R;
 import htw.university.sharedbill.controller.bluetooth.SelectDeviceActivity;
-import htw.university.sharedbill.controller.invoce.InvoiceShowAcitivity;
+import htw.university.sharedbill.controller.invoce.InvoiceShowActivity;
 import htw.university.sharedbill.model.invoice.Invoice;
-import htw.university.sharedbill.model.invoice.InvoiceUtils;
+import htw.university.sharedbill.model.invoice.StorageUtils;
 import htw.university.sharedbill.model.invoice.InvoiceWrapper;
 
 public class InvoiceAdapter extends RecyclerView.Adapter<InvoiceAdapter.InvoiceViewHolder> {
@@ -60,7 +62,13 @@ public class InvoiceAdapter extends RecyclerView.Adapter<InvoiceAdapter.InvoiceV
             popupMenu.setOnMenuItemClickListener(item -> {
                 String selectedStatus = item.getTitle().toString();
                 invoiceWrapper.setPaymentStatus(selectedStatus);
-                InvoiceUtils.updateInvoiceInStorage(context, invoiceWrapper);
+                try {
+                    StorageUtils.updateInvoiceInStorage(context, invoiceWrapper);
+                } catch (IOException e) {
+                    throw new RuntimeException(e);
+                } catch (JSONException e) {
+                    throw new RuntimeException(e);
+                }
                 holder.paymentStatusTextView.setText(selectedStatus); // Update the text of the TextView
                 Toast.makeText(context, "Status ausgewählt: " + selectedStatus, Toast.LENGTH_SHORT).show();
                 return true;
@@ -87,7 +95,7 @@ public class InvoiceAdapter extends RecyclerView.Adapter<InvoiceAdapter.InvoiceV
         Intent intent = null;
         switch (title) {
             case "Anzeigen":
-                intent = new Intent(context, InvoiceShowAcitivity.class);
+                intent = new Intent(context, InvoiceShowActivity.class);
                 intent.putExtra("invoice", (Serializable) invoiceWrapper);
                 context.startActivity(intent);
                 return true;
@@ -99,7 +107,7 @@ public class InvoiceAdapter extends RecyclerView.Adapter<InvoiceAdapter.InvoiceV
                 context.startActivity(intent);
                 return true;
             case "Löschen":
-                boolean deleted = InvoiceUtils.deleteInvoiceFromStorage(context, invoice);
+                boolean deleted = StorageUtils.deleteInvoiceFromStorage(context, invoice);
                 if (deleted) {
                     int index = InvoiceWrapper.INVOICES.indexOf(invoiceWrapper); // <- Korrekt den Index holen
                     if (index != -1) {

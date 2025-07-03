@@ -185,18 +185,6 @@ public class SimpleGattServer {
                 if (!connectedDevices.contains(dev)) {
                     connectedDevices.add(dev);
 
-                    try {
-                        JSONObject json = new JSONObject();
-                        json.put("toClient", true);
-                        json.put("command", "getMac");
-                        json.put("mac_address", dev.getAddress());
-
-                        sendToClientJSON(dev, json);
-
-                    } catch (JSONException e) {
-                        Log.e(TAG, "JSON-Fehler beim Senden der MAC-Adresse", e);
-                    }
-
                     connectionListeners.forEach(l -> l.onConnectionState(dev, "verbunden"));
                     Log.d(TAG, "Verbunden: " + dev.getAddress());
                 }
@@ -230,7 +218,19 @@ public class SimpleGattServer {
 
                     try {
                         JSONObject json = new JSONObject(message);
-                        notifyDataListeners(dev, json);
+                        String cmd = json.getString("cmd");
+
+                        if (cmd.equalsIgnoreCase("getMac")) {
+                            JSONObject response = new JSONObject();
+                            response.put("toClient", true);
+                            response.put("toServer", false);
+                            response.put("cmd", "setMac");
+                            response.put("mac", dev.getAddress());
+
+                            sendToClientJSON(dev, response);
+                        } else {
+                            notifyDataListeners(dev, json);
+                        }
                         Log.d(TAG, "Nachricht empfangen von " + dev.getAddress() + ": " + message);
                     } catch (JSONException e) {
                         Log.e(TAG, "Ungültiger JSON empfangen von " + dev.getAddress() + ": " + message, e);
@@ -294,4 +294,7 @@ public class SimpleGattServer {
         Log.d(TAG, "Direktnachricht an " + device.getAddress() + " gesendet: " + jsonObject.toString());
     }
 
+    public List<BluetoothDevice> getConnectedDevices() {
+        return connectedDevices;
+    }
 }

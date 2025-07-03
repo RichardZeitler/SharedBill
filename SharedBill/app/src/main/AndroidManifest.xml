@@ -59,7 +59,7 @@
             android:name=".controller.bluetooth.SelectDeviceActivity"
             android:exported="false" />
         <activity
-            android:name=".controller.invoce.InvoiceShowAcitivity"
+            android:name=".controller.invoce.InvoiceShowActivity"
             android:exported="false" />
         <activity
             android:name=".controller.invoce.InvoiceHistoryActivity"
@@ -68,7 +68,7 @@
             android:name=".controller.invoce.CreateInvoiceActivity"
             android:exported="false" />
         <activity
-            android:name=".controller.invoce.StartActivity"
+            android:name=".controller.StartActivity"
             android:exported="true"
             android:theme="@style/Theme.SharedBill">
             <intent-filter>

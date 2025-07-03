@@ -13,7 +13,7 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
-import htw.university.sharedbill.controller.invoce.StartActivity;
+import htw.university.sharedbill.controller.StartActivity;
 
 /**
  * Instrumentationstest zum Überprüfen, ob die CreateInvoiceActivity

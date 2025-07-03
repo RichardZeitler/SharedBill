@@ -2,6 +2,7 @@ package htw.university.sharedbill.adapter;
 
 import android.content.Context;
 import android.graphics.Color;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
@@ -11,6 +12,8 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
 import java.util.ArrayList;
+
+import htw.university.sharedbill.R;
 
 public class DeviceAdapter extends ArrayAdapter<String> {
     private int connectedIndex = -1;
@@ -27,8 +30,18 @@ public class DeviceAdapter extends ArrayAdapter<String> {
     @NonNull
     @Override
     public View getView(int position, @Nullable View convertView, @NonNull ViewGroup parent) {
-        View view = super.getView(position, convertView, parent);
-        TextView textView = view.findViewById(android.R.id.text1);
+        View view = convertView;
+        if (view == null) {
+            LayoutInflater inflater = LayoutInflater.from(getContext());
+            view = inflater.inflate(R.layout.item_layout_normal, parent, false);
+        }
+
+        TextView textView = view.findViewById(R.id.itemTextNormal);
+        String deviceName = getItem(position);
+
+        if (deviceName != null) {
+            textView.setText(deviceName);
+        }
 
         if (position == connectedIndex) {
             textView.setTextColor(Color.GREEN);
@@ -38,5 +51,6 @@ public class DeviceAdapter extends ArrayAdapter<String> {
 
         return view;
     }
+
 }
 

@@ -24,7 +24,7 @@ import org.junit.runner.RunWith;
 
 import java.time.LocalDateTime;
 
-import htw.university.sharedbill.controller.invoce.StartActivity;
+import htw.university.sharedbill.controller.StartActivity;
 import htw.university.sharedbill.model.invoice.Address;
 import htw.university.sharedbill.model.invoice.EateryInvoice;
 import htw.university.sharedbill.model.invoice.InvoiceWrapper;
