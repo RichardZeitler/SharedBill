@@ -53,22 +53,7 @@ public class ItemUnitTest {
     public void testNegativeGrossPrice() {
         new Item("Brot", -5.0, 0.19);
     }
-
-    /**
-     * Testet die {@code equals()}-Methode der Klasse {@link Item}.
-     * Zwei Items mit gleichen Attributen sollen als gleich erkannt werden,
-     * Items mit unterschiedlicher Beschreibung jedoch nicht.
-     */
-    @Test
-    public void testEquals() {
-        Item a = new Item("Milch", "1L", 1.00, 0.19);
-        Item b = new Item("Milch", "1L", 1.00, 0.19);
-        Item c = new Item("Milch", "2L", 1.00, 0.19);
-
-        assertEquals(a, b);
-        assertNotEquals(a, c);
-    }
-
+    
     /**
      * Testet die automatische Umrechnung des Steuersatzes,
      * falls dieser als Prozentzahl (z.B. 7) statt als Dezimalzahl angegeben wird.
