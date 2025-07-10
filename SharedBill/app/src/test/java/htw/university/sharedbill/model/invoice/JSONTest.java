@@ -191,8 +191,8 @@ public class JSONTest {
         JSONObject json = invoice.getJSONObject();
 
         assertEquals("DE123456789", json.get("vatID"));
-        assertEquals(2.1479619885337313, json.get("netPrice"));
-        assertEquals(0.35203801146626873, json.get("taxPrice"));
+        assertEquals(2.15, json.get("netPrice"));
+        assertEquals(0.35, json.get("taxPrice"));
         assertEquals("Bar", json.get("paymentMethod"));
         assertEquals("CHK001", json.get("checkSum"));
         assertEquals("INV123", json.get("invoiceID"));
@@ -212,16 +212,16 @@ public class JSONTest {
         JSONObject firstItem = itemsArray.getJSONObject(0);
         assertEquals("Brötchen", firstItem.getString("name"));
         assertEquals("Frisch gebacken", firstItem.getString("description"));
-        assertEquals(0.4672897196261682, firstItem.getDouble("netPrice"), 0.000001);
-        assertEquals(0.03271028037383178, firstItem.getDouble("taxPrice"), 0.000001);
+        assertEquals(0.47, firstItem.getDouble("netPrice"), 0.000001);
+        assertEquals(0.03, firstItem.getDouble("taxPrice"), 0.000001);
         assertEquals(0.5, firstItem.getDouble("grossPrice"), 0.000001);
         assertEquals(0.07, firstItem.getDouble("taxRate"), 0.000001);
 
         JSONObject secondItem = itemsArray.getJSONObject(1);
         assertEquals("Kaffee", secondItem.getString("name"));
         assertEquals("Groß", secondItem.getString("description"));
-        assertEquals(1.680672268907563, secondItem.getDouble("netPrice"), 0.000001);
-        assertEquals(0.31932773109243695, secondItem.getDouble("taxPrice"), 0.000001);
+        assertEquals(1.68, secondItem.getDouble("netPrice"), 0.000001);
+        assertEquals(0.32, secondItem.getDouble("taxPrice"), 0.000001);
         assertEquals(2, secondItem.getDouble("grossPrice"), 0.000001);
         assertEquals(0.19, secondItem.getDouble("taxRate"), 0.000001);
     }

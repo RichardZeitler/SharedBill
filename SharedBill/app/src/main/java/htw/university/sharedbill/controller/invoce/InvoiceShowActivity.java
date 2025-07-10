@@ -358,11 +358,12 @@ public class InvoiceShowActivity extends AppCompatActivity implements MessageLis
         try {
             request.put("cmd", status);
             request.put("itemCode", itemCode);
+            request.put("user", macAddress);
 
             if (simpleGattClient != null && simpleGattClient.isConnected()) {
-                request.put("user", macAddress);
                 request.put("toServer", true);
                 simpleGattClient.sendData(request);
+
                 return;
             }
 
