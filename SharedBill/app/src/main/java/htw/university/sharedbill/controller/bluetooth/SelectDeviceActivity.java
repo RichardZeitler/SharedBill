@@ -132,6 +132,7 @@ public class SelectDeviceActivity extends AppCompatActivity implements ScanResul
             setupBluetoothHandlers();
         } else {
             requestBluetoothPermissions();
+            checkPermissionsAndSetup();
         }
     }
 

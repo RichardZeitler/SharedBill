@@ -90,17 +90,20 @@ public class InvoiceShowActivity extends AppCompatActivity implements MessageLis
         });
 
         invoiceWrapper = (InvoiceWrapper) getIntent().getSerializableExtra("invoice");
+
         macAddress = getIntent().getStringExtra("mac_address");
         sharedInvoice = getIntent().getBooleanExtra("sharedInvoice", false);
 
         partialInvoiceServer = new EateryInvoice(); // Erstelle Teilrechnung
         partialInvoiceClient = new EateryInvoice(); // Erstelle Teilrechnung
 
+        Log.d("SharedInvoice", sharedInvoice+"");
+
         if (sharedInvoice)
             initBluetoothLE();
 
         initViews(); // Initialisiere alle UI-Komponenten
-        initListeners(); // Initialisiere alle Listener
+        initListeners(sharedInvoice); // Initialisiere alle Listener
 
         loadInvoiceData(invoiceWrapper, sharedInvoice); // Lade Rechnungsdaten
     }
@@ -117,11 +120,13 @@ public class InvoiceShowActivity extends AppCompatActivity implements MessageLis
     /**
      * Setzt Listener für Bluetooth-Events und UI-Aktionen.
      */
-    private void initListeners() {
-        simpleGattServer.registerDataListener(this);
-        simpleGattClient.registerMessageListener(this);
-        partialInvoiceServer.addObserver(this);
-        partialInvoiceClient.addObserver(this);
+    private void initListeners(boolean sharedInvoice) {
+        if (sharedInvoice) {
+            simpleGattServer.registerDataListener(this);
+            simpleGattClient.registerMessageListener(this);
+            partialInvoiceServer.addObserver(this);
+            partialInvoiceClient.addObserver(this);
+        }
 
         confrimInvoice.setOnClickListener(v -> {
             EateryInvoice baseInvoice = (EateryInvoice) invoiceWrapper.getInvoice();
@@ -267,6 +272,7 @@ public class InvoiceShowActivity extends AppCompatActivity implements MessageLis
 
         try {
             final EateryInvoice invoice = (EateryInvoice) wrapper.getInvoice();
+
 
             if (!sharedInvoice) {
                 // Setze nur Preise, wenn Rechnung nicht geteilt wird
